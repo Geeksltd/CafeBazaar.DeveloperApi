@@ -42,7 +42,7 @@
 
             await request.Validate();
 
-            var result = await _options.BaseUri.Post<CafeBazaarObtainTokenResult>(path, request);
+            var result = await _options.BaseUri.Post<CafeBazaarObtainTokenResult>(path, request.ToDictionary());
 
             result.EnsureSucceeded();
 

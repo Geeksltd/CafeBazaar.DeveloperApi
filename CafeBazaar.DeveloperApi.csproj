@@ -8,10 +8,8 @@
     <Version>1.0.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
-    <LangVersion>default</LangVersion>
     <DefineConstants>$(DefineConstants)</DefineConstants>
     <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <LangVersion>latest</LangVersion>
     <DebugType>portable</DebugType>
     <PackageProjectUrl>https://nuget.org/packages/CafeBazaar.DeveloperApi/</PackageProjectUrl>
@@ -40,31 +38,8 @@
     <None Remove="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="*.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Enums\CafeBazaarConsumptionState.cs" />
-    <Compile Include="Enums\CafeBazaarPurchaseState.cs" />
-    <Compile Include="Extensions\HttpExtensions.cs" />
-    <Compile Include="Extensions\ObjectExtensions.cs" />
-    <Compile Include="Extensions\ServiceRegistrationExtensions.cs" />
-    <Compile Include="Extensions\JsonExtensions.cs" />
-    <Compile Include="Requests\CafeBazaarObtainTokenRequest.cs" />
-    <Compile Include="Requests\CafeBazaarTokenRequest.cs" />
-    <Compile Include="Requests\CafeBazaarValidatePurchaseRequest.cs" />
-    <Compile Include="Requests\ICafeBazaarRequest.cs" />
-    <Compile Include="Results\CafeBazaarObtainTokenResult.cs" />
-    <Compile Include="Results\CafeBazaarRenewTokenResult.cs" />
-    <Compile Include="Results\CafeBazaarResultBase.cs" />
-    <Compile Include="Storage\CafeBazaarInMemoryTokenStorage.cs" />
-    <Compile Include="Results\CafeBazaarValidatePurchaseResult.cs" />
-    <Compile Include="Storage\CafeBazaarToken.cs" />
-    <Compile Include="Storage\CafeBazaarTokenStorageBase.cs" />
-    <Compile Include="Storage\ICafeBazaarTokenStorage.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
-    <PackageReference Include="Olive" Version="2.1.210" />
+    <PackageReference Include="Olive" Version="2.1.212" />
   </ItemGroup>
 </Project>

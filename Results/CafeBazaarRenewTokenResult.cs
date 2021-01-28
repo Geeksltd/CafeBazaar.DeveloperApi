@@ -6,7 +6,7 @@
     {
         public string AccessToken { get; set; }
         public string TokenType { get; set; }
-        public DateTimeOffset ExpiresIn { get; set; }
+        public TimeSpan ExpiresIn { get; set; }
         public string Scope { get; set; }
     }
 }

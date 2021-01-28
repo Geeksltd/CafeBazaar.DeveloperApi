@@ -1,12 +1,14 @@
 ﻿namespace CafeBazaar.DeveloperApi
 {
     using System;
+    using System.Text.Json.Serialization;
 
     public class CafeBazaarObtainTokenResult : CafeBazaarResultBase
     {
         public string AccessToken { get; set; }
         public string TokenType { get; set; }
-        public DateTimeOffset ExpiresIn { get; set; }
+        [JsonConverter(typeof(MillisecondsBasedTimeSpanConverter))]
+        public TimeSpan ExpiresIn { get; set; }
         public string RefreshToken { get; set; }
         public string Scope { get; set; }
     }

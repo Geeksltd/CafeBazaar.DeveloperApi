@@ -1,29 +1,24 @@
 ﻿namespace CafeBazaar.DeveloperApi
 {
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Serialization;
+    using System.Text.Json;
 
     static class JsonExtensions
     {
-        public static string ToJson(this object value)
+        public static string ToJson<T>(this T value)
         {
-            return JsonConvert.SerializeObject(value, CreateDefaultSettings());
+            return JsonSerializer.Serialize<T>(value, CreateDefaultOptions());
         }
 
         public static T FromJson<T>(this string value)
         {
-            return JsonConvert.DeserializeObject<T>(value, CreateDefaultSettings());
+            return JsonSerializer.Deserialize<T>(value, CreateDefaultOptions());
         }
 
-        static JsonSerializerSettings CreateDefaultSettings()
+        static JsonSerializerOptions CreateDefaultOptions()
         {
-            return new JsonSerializerSettings
+            return new JsonSerializerOptions
             {
-                ContractResolver = new DefaultContractResolver
-                {
-                    NamingStrategy = new SnakeCaseNamingStrategy()
-                },
-                Formatting = Formatting.Indented
+                PropertyNamingPolicy = SnakeCaseNamingPolicy.SnakeCase
             };
         }
     }

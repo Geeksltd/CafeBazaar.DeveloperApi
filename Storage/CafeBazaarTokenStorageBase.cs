@@ -12,9 +12,9 @@
 
         public async Task<string> GetRefreshToken() => (await GetToken()).RefreshToken;
 
-        public abstract Task Save(string accessToken, DateTimeOffset expiresIn, string refreshToken);
+        public abstract Task Save(string accessToken, TimeSpan expiresIn, string refreshToken);
 
-        public abstract Task Renew(string accessToken, DateTimeOffset expiresIn);
+        public abstract Task Renew(string accessToken, TimeSpan expiresIn);
 
         protected abstract Task<CafeBazaarToken> GetToken();
     }
