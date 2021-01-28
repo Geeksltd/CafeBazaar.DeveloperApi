@@ -6,7 +6,7 @@
     {
         public static string ToJson<T>(this T value)
         {
-            return JsonSerializer.Serialize<T>(value, CreateDefaultOptions());
+            return JsonSerializer.Serialize(value, CreateDefaultOptions());
         }
 
         public static T FromJson<T>(this string value)
