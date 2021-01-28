@@ -46,7 +46,7 @@
 
             result.EnsureSucceeded();
 
-            await _tokenStorage.Save(result.AccessToken, result.ExpiresIn, result.RefreshToken);
+            await _tokenStorage.Save(result.TokenType, result.AccessToken, result.ExpiresIn, result.RefreshToken);
         }
 
         public async Task<CafeBazaarValidatePurchaseResult> ValidatePurchase(CafeBazaarValidatePurchaseRequest request)
@@ -57,7 +57,7 @@
 
             var path = $"/devapi/v2/api/validate/{request.PackageName}/inapp/{request.ProductId}/purchases/{request.PurchaseToken}/";
 
-            var result = await _options.BaseUri.Get<CafeBazaarValidatePurchaseResult>(path);
+            var result = await _options.BaseUri.Get<CafeBazaarValidatePurchaseResult>(path, await _tokenStorage.GetTokenValue());
 
             result.EnsureSucceeded();
 
@@ -90,7 +90,7 @@
 
             result.EnsureSucceeded();
 
-            await _tokenStorage.Renew(result.AccessToken, result.ExpiresIn);
+            await _tokenStorage.Renew(result.TokenType, result.AccessToken, result.ExpiresIn);
         }
     }
 }
