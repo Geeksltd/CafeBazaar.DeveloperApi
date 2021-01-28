@@ -42,7 +42,12 @@
 
             await request.Validate();
 
-            var result = await _options.BaseUri.Post<CafeBazaarObtainTokenResult>(path, request.ToDictionary());
+            var invoker = new WebApiInvoker(_options.BaseUri)
+            {
+                RequestPolicy = NamingPolicy.SnakeCase,
+                ResponsePolicy = NamingPolicy.SnakeCase
+            };
+            var result = await invoker.PostForm<CafeBazaarObtainTokenResult>(path, request);
 
             result.EnsureSucceeded();
 
@@ -55,9 +60,14 @@
 
             await EnsureAccessTokenValidity();
 
-            var path = $"/devapi/v2/api/validate/{request.PackageName}/inapp/{request.ProductId}/purchases/{request.PurchaseToken}/";
+            var path = $"/devapi/v2/api/validate/{request.PackageName}/inapp/{request.ProductId}/purchases/{request.PurchaseToken}/?access_token={await _tokenStorage.GetAccessToken()}";
 
-            var result = await _options.BaseUri.Get<CafeBazaarValidatePurchaseResult>(path, await _tokenStorage.GetTokenValue());
+            var invoker = new WebApiInvoker(_options.BaseUri)
+            {
+                RequestPolicy = NamingPolicy.SnakeCase,
+                AuthValue = await _tokenStorage.GetTokenValue()
+            };
+            var result = await invoker.Get<CafeBazaarValidatePurchaseResult>(path);
 
             result.EnsureSucceeded();
 
@@ -86,7 +96,13 @@
 
             await request.Validate();
 
-            var result = await _options.BaseUri.Post<CafeBazaarRenewTokenResult>(path, request.ToDictionary());
+            var invoker = new WebApiInvoker(_options.BaseUri)
+            {
+                RequestPolicy = NamingPolicy.SnakeCase,
+                ResponsePolicy = NamingPolicy.SnakeCase,
+                AuthValue = await _tokenStorage.GetTokenValue()
+            };
+            var result = await invoker.PostForm<CafeBazaarRenewTokenResult>(path, request);
 
             result.EnsureSucceeded();
 
