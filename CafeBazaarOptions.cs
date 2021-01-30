@@ -1,9 +1,11 @@
 ﻿namespace CafeBazaar.DeveloperApi
 {
+    using System;
+
     public class CafeBazaarOptions
     {
-        public string BaseUri { get; set; } = "https://pardakht.cafebazaar.ir";
-        public string RedirectUri { get; set; }
+        public Uri BaseUri { get; set; } = new Uri(@"https://pardakht.cafebazaar.ir");
+        public Uri RedirectUri { get; set; }
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
     }

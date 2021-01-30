@@ -1,5 +1,6 @@
 ﻿namespace CafeBazaar.DeveloperApi
 {
+    using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +11,11 @@
             return services.Configure<CafeBazaarOptions>(opts => config.GetSection(configKey)?.Bind(opts))
                            .AddScoped<CafeBazaarDeveloperService>()
                            .AddSingleton<ICafeBazaarTokenStorage, CafeBazaarInMemoryTokenStorage>();
+        }
+
+        public static IApplicationBuilder UseCafeBazaarDeveloperApi(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<CafeBazaarAuthorizationMiddleware>();
         }
     }
 }
