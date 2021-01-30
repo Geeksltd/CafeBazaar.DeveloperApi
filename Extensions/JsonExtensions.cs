@@ -5,30 +5,14 @@
 
     static class JsonExtensions
     {
-        public static string ToJson<T>(this T value, NamingPolicy policy = NamingPolicy.CamelCase)
+        public static string ToJson<T>(this T value)
         {
-            return JsonSerializer.Serialize(value, CreateDefaultOptions(policy));
+            return JsonSerializer.Serialize(value);
         }
 
-        public static T FromJson<T>(this string value, NamingPolicy policy = NamingPolicy.CamelCase)
+        public static T FromJson<T>(this string value)
         {
-            return JsonSerializer.Deserialize<T>(value, CreateDefaultOptions(policy));
-        }
-
-        static JsonSerializerOptions CreateDefaultOptions(NamingPolicy policy)
-        {
-            return new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = GetNamingPolicy(policy)
-            };
-        }
-
-        static JsonNamingPolicy GetNamingPolicy(NamingPolicy policy)
-        {
-            if (policy == NamingPolicy.SnakeCase)
-                return SnakeCaseNamingPolicy.SnakeCase;
-
-            return JsonNamingPolicy.CamelCase;
+            return JsonSerializer.Deserialize<T>(value);
         }
     }
 }

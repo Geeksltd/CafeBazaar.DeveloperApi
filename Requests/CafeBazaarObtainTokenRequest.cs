@@ -1,15 +1,25 @@
 ﻿namespace CafeBazaar.DeveloperApi
 {
     using System;
+    using System.Text.Json.Serialization;
     using System.Threading.Tasks;
     using Olive;
 
-    public class CafeBazaarObtainTokenRequest : ICafeBazaarRequest
+    class CafeBazaarObtainTokenRequest : ICafeBazaarRequest
     {
+        [JsonPropertyName("grant_type")]
         public string GrantType => "authorization_code";
+
+        [JsonPropertyName("code")]
         public string Code { get; set; }
+
+        [JsonPropertyName("client_id")]
         public string ClientId { get; set; }
+
+        [JsonPropertyName("client_secret")]
         public string ClientSecret { get; set; }
+
+        [JsonPropertyName("redirect_uri")]
         public string RedirectUri { get; set; }
 
         public Task Validate()

@@ -12,10 +12,7 @@
     {
         public string BaseAddress { get; }
         public Encoding Encoding { get; set; } = Encoding.UTF8;
-        public NamingPolicy RequestPolicy { get; set; }
-        public NamingPolicy ResponsePolicy { get; set; }
         public TimeSpan Timeout { get; set; } = 30.Seconds();
-        public (string, string) AuthValue { get; set; }
 
         public WebApiInvoker(string baseAddress) => BaseAddress = baseAddress;
 
@@ -28,7 +25,7 @@
         {
             return Send<T>(async (client, enc) =>
             {
-                var payload = new StringContent(request.ToJson(RequestPolicy), Encoding, "text/json");
+                var payload = new StringContent(request.ToJson(), Encoding, "text/json");
                 return await client.PostAsync(path, payload);
             });
         }
@@ -48,12 +45,9 @@
             {
                 var client = CreateClient();
 
-                if (AuthValue != default)
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AuthValue.Item1, AuthValue.Item2);
-
                 var message = await requestInitiator(client, Encoding);
 
-                return Encoding.GetString(await message.Content.ReadAsByteArrayAsync()).FromJson<T>(ResponsePolicy);
+                return Encoding.GetString(await message.Content.ReadAsByteArrayAsync()).FromJson<T>();
             }
             catch (Exception ex)
             {
