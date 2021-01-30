@@ -39,9 +39,9 @@ Here is the required properties:
 }
 ```
 
-## Validate a purchase token
+## Authorize your app
 
-You can use `ValidatePurchase` to validate a purchase token.
+You can use `IsAuthorizationRequired` to check whether authorization is required or not. If this method return true, you have to redirect to Cafe Bazaar's authorization page and authorize your app. `GetAuthorizationUri` should be used to get the authorization url. After user successfully authorized the app, Cafe Bazaar will redirect the user to our app, to where we've specified in our already created [Client](https://pishkhan.cafebazaar.ir/settings/api). There will be a query param with name `code` which contains an authorization code and you'll need to pass it to `HandleAuthorizationCallback`, which is responsible to complete the authorization steps and acquire the final access token from Cafe Bazaar. After a successful authorization, you can use provided services to validate a purchase, fetch details or cancel a subscription.
 
 ```
 namespace MyApp
@@ -50,7 +50,7 @@ namespace MyApp
 
     [ApiController]
     [Route("cafe-bazaar")]
-    public class MyController : ControllerBase
+    public class CafeBazaarController : ControllerBase
     {
         private readonly CafeBazaarDeveloperService _developerService;
 
@@ -75,8 +75,35 @@ namespace MyApp
 
             return RedirectToAction("Index");
         }
+    }
+}
+```
 
-        [HttpGet("validate/{token}")]
+### Refreshing access token
+
+Cafe Bazaar's created access token only a valid for 1 hour, and after that, we'll need to obtain a new access token. This will be authomatically handled by the library and you don't have to do anything for this.
+
+## Validate a purchase
+
+You can use `ValidatePurchase` to validate a purchase token.
+
+```
+namespace MyApp
+{
+    using CafeBazaar.DeveloperApi;
+
+    [ApiController]
+    [Route("cafe-bazaar")]
+    public class MyController : ControllerBase
+    {
+        private readonly CafeBazaarDeveloperService _developerService;
+
+        public CafeBazaarController(CafeBazaarDeveloperService developerService)
+        {
+            _developerService = developerService;
+        }
+
+        [HttpGet("purchase/{productId}/{purchaseToken}")]
         public async Task<IActionResult> Validate(string productId, string purchaseToken)
         {
             var result = await _developerService.ValidatePurchase(new CafeBazaarValidatePurchaseRequest
@@ -86,7 +113,78 @@ namespace MyApp
                 PurchaseToken = purchaseToken
             });
 
-            if (result == null) return Content("Not found");
+            return new JsonResult(result);
+        }
+    }
+}
+```
+
+## Validate a subscription
+
+You can use `ValidateSubscription` to validate a subscription.
+
+```
+namespace MyApp
+{
+    using CafeBazaar.DeveloperApi;
+
+    [ApiController]
+    [Route("cafe-bazaar")]
+    public class MyController : ControllerBase
+    {
+        private readonly CafeBazaarDeveloperService _developerService;
+
+        public CafeBazaarController(CafeBazaarDeveloperService developerService)
+        {
+            _developerService = developerService;
+        }
+
+        [HttpGet("subscription/{subscriptionId}/{purchaseToken}")]
+        public async Task<IActionResult> Validate(string subscriptionId, string purchaseToken)
+        {
+            var result = await _developerService.ValidateSubscription(new CafeBazaarValidateSubscriptionRequest
+            {
+                PackageName = "my.app.com",
+                SubscriptionId = subscriptionId,
+                PurchaseToken = purchaseToken
+            });
+
+            return new JsonResult(result);
+        }
+    }
+}
+```
+
+## Cancel a subscription
+
+You can use `CancelSubscription` to cancel a subscription.
+
+```
+namespace MyApp
+{
+    using CafeBazaar.DeveloperApi;
+
+    [ApiController]
+    [Route("cafe-bazaar")]
+    public class MyController : ControllerBase
+    {
+        private readonly CafeBazaarDeveloperService _developerService;
+
+        public CafeBazaarController(CafeBazaarDeveloperService developerService)
+        {
+            _developerService = developerService;
+        }
+
+        [HttpPost("subscription/{subscriptionId}/{purchaseToken}/cancel")]
+        public async Task<IActionResult> CancelSubscription(string subscriptionId, string purchaseToken)
+        {
+            var result = await _developerService.CancelSubscription(new CafeBazaarCancelSubscriptionRequest
+            {
+                PackageName = "my.app.com",
+                SubscriptionId = subscriptionId,
+                PurchaseToken = purchaseToken
+            });
+
             return new JsonResult(result);
         }
     }
