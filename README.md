@@ -70,6 +70,40 @@ namespace MyApp
 
             return Content("Cafe Bazaar is authorized.");
         }
+    }
+}
+```
+
+### Automatic authorization completion
+
+You can use `UseCafeBazaarDeveloperApi` to register a middleware to complete the authorization chain.
+
+````c#
+public override void Configure(IApplicationBuilder app)
+{
+    app.UseCafeBazaarDeveloperApi();
+}
+```
+
+### Manually authorization completion
+
+You can use `HandleAuthorizationCallback` to manually complete the authorization chain.
+
+```c#
+namespace MyApp
+{
+    using CafeBazaar.DeveloperApi;
+
+    [ApiController]
+    [Route("cafe-bazaar")]
+    public class CafeBazaarController : ControllerBase
+    {
+        private readonly CafeBazaarDeveloperService _developerService;
+
+        public CafeBazaarController(CafeBazaarDeveloperService developerService)
+        {
+            _developerService = developerService;
+        }
 
         [HttpGet("authorize-callback")]
         public async Task<IActionResult> AuthorizeCallback(string code)
@@ -79,6 +113,15 @@ namespace MyApp
             return RedirectToAction("Index");
         }
     }
+}
+```
+
+You can use `UseCafeBazaarDeveloperApi` to register a middleware to handle authorization callback.
+
+````c#
+public override void Configure(IApplicationBuilder app)
+{
+    app.UseCafeBazaarDeveloperApi();
 }
 ```
 
