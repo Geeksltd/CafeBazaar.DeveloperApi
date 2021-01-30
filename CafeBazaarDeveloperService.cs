@@ -11,7 +11,7 @@
         readonly ICafeBazaarTokenStorage _tokenStorage;
         readonly WebApiInvoker _webApiInvoker;
 
-        public CafeBazaarDeveloperService(IOptions<CafeBazaarOptions> options, ICafeBazaarTokenStorage tokenStorage)
+        public CafeBazaarDeveloperService(IOptionsSnapshot<CafeBazaarOptions> options, ICafeBazaarTokenStorage tokenStorage)
         {
             _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
             _tokenStorage = tokenStorage ?? throw new ArgumentNullException(nameof(tokenStorage));

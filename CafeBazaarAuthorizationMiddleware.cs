@@ -12,7 +12,7 @@
         private readonly RequestDelegate _next;
         private readonly CafeBazaarOptions _options;
 
-        public CafeBazaarAuthorizationMiddleware(RequestDelegate next, IOptions<CafeBazaarOptions> options)
+        public CafeBazaarAuthorizationMiddleware(RequestDelegate next, IOptionsSnapshot<CafeBazaarOptions> options)
         {
             _next = next ?? throw new ArgumentNullException(nameof(next));
             _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
