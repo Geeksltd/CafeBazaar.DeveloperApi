@@ -26,13 +26,13 @@
         public Task<string> GetAuthorizationUri()
         {
             return Task.FromResult(
-                $"{_options.BaseUri}/devapi/v2/auth/authorize/?response_type=code&access_type=offline&redirect_uri={_options.RedirectUri}&client_id={_options.ClientId}"
+                $"{_options.BaseUri}devapi/v2/auth/authorize/?response_type=code&access_type=offline&redirect_uri={_options.RedirectUri}&client_id={_options.ClientId}"
             );
         }
 
         public async Task HandleAuthorizationCallback(string code)
         {
-            var path = "/devapi/v2/auth/token/";
+            var path = "devapi/v2/auth/token/";
 
             var request = new CafeBazaarObtainTokenRequest
             {
@@ -57,7 +57,7 @@
 
             await EnsureAccessTokenValidity();
 
-            var path = $"/devapi/v2/api/validate/{request.PackageName}/inapp/{request.ProductId}/purchases/{request.PurchaseToken}/?access_token={await _tokenStorage.GetAccessToken()}";
+            var path = $"devapi/v2/api/validate/{request.PackageName}/inapp/{request.ProductId}/purchases/{request.PurchaseToken}/?access_token={await _tokenStorage.GetAccessToken()}";
 
             var result = await _webApiInvoker.Get<CafeBazaarValidatePurchaseResult>(path);
 
@@ -72,7 +72,7 @@
 
             await EnsureAccessTokenValidity();
 
-            var path = $"/devapi/v2/api/applications/{request.PackageName}/subscriptions/{request.SubscriptionId}/purchases/{request.PurchaseToken}/?access_token={await _tokenStorage.GetAccessToken()}";
+            var path = $"devapi/v2/api/applications/{request.PackageName}/subscriptions/{request.SubscriptionId}/purchases/{request.PurchaseToken}/?access_token={await _tokenStorage.GetAccessToken()}";
 
             var result = await _webApiInvoker.Get<CafeBazaarValidateSubscriptionResult>(path);
 
@@ -87,7 +87,7 @@
 
             await EnsureAccessTokenValidity();
 
-            var path = $"/devapi/v2/api/applications/{request.PackageName}/subscriptions/{request.SubscriptionId}/purchases/{request.PurchaseToken}/cancel/?access_token={await _tokenStorage.GetAccessToken()}";
+            var path = $"devapi/v2/api/applications/{request.PackageName}/subscriptions/{request.SubscriptionId}/purchases/{request.PurchaseToken}/cancel/?access_token={await _tokenStorage.GetAccessToken()}";
 
             var result = await _webApiInvoker.Get<CafeBazaarCancelSubscriptionResult>(path);
 
@@ -107,7 +107,7 @@
 
         async Task RenewAccessToken()
         {
-            var path = "/devapi/v2/auth/token/";
+            var path = "devapi/v2/auth/token/";
 
             var request = new CafeBazaarRenewTokenRequest
             {
