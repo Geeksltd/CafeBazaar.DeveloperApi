@@ -14,7 +14,7 @@
 
         bool Failed => Error.HasValue();
 
-        public void EnsureSucceeded()
+        internal void EnsureSucceeded()
         {
             if (Failed)
                 throw new Exception($"{Error}: {ErrorDescription}");
