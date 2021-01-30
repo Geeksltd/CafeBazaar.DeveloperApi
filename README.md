@@ -6,13 +6,13 @@ This is a simple C# library you can use to communicate with Cafe Bazaar's Develo
 
 To use this library, you need to add its dependencies using `AddCafeBazaarDeveloperApi` method. First of all, add the required using statement.
 
-```
+```c#
 using CafeBazaar.DeveloperApi;
 ```
 
 Then make a call to `AddCafeBazaarDeveloperApi` extension method.
 
-```
+```c#
 public override void ConfigureServices(IServiceCollection services)
 {
     services.AddCafeBazaarDeveloperApi(Configuration);
@@ -31,7 +31,7 @@ This method will register an instance of the following classes.
 
 Here is the required properties:
 
-```
+```json
 {
   "CafeBazaar": {
     "BaseUri": "https://pardakht.cafebazaar.ir", // This is optional
@@ -46,7 +46,7 @@ Here is the required properties:
 
 You can use `IsAuthorizationRequired` to check whether authorization is required or not. If this method return true, you have to redirect to Cafe Bazaar's authorization page and authorize your app. `GetAuthorizationUri` should be used to get the authorization url. After user successfully authorized the app, Cafe Bazaar will redirect the user to our app, to where we've specified in our already created [Client](https://pishkhan.cafebazaar.ir/settings/api). There will be a query param with name `code` which contains an authorization code and you'll need to pass it to `HandleAuthorizationCallback`, which is responsible to complete the authorization steps and acquire the final access token from Cafe Bazaar. After a successful authorization, you can use provided services to validate a purchase, fetch details or cancel a subscription.
 
-```
+```c#
 namespace MyApp
 {
     using CafeBazaar.DeveloperApi;
@@ -90,7 +90,7 @@ Cafe Bazaar's created access token only a valid for 1 hour, and after that, we'l
 
 You can use `ValidatePurchase` to validate a purchase token.
 
-```
+```c#
 namespace MyApp
 {
     using CafeBazaar.DeveloperApi;
@@ -126,7 +126,7 @@ namespace MyApp
 
 You can use `ValidateSubscription` to validate a subscription.
 
-```
+```c#
 namespace MyApp
 {
     using CafeBazaar.DeveloperApi;
@@ -162,7 +162,7 @@ namespace MyApp
 
 You can use `CancelSubscription` to cancel a subscription.
 
-```
+```c#
 namespace MyApp
 {
     using CafeBazaar.DeveloperApi;
