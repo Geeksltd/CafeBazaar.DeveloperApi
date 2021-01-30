@@ -22,7 +22,9 @@ public override void ConfigureServices(IServiceCollection services)
 This method will register an instance of the following classes.
 
 `CafeBazaarOptions`: This is the options used in the library.
+
 `CafeBazaarDeveloperService`: You will use this to call any of the provided endpoints.
+
 `CafeBazaarInMemoryTokenStorage`: This is the default implementation of `ICafeBazaarTokenStorage`, which stores the authorization details in-memory. By using this, you'll have to re-authorize your app against Cafe Bazaar.
 
 ## Configuration
