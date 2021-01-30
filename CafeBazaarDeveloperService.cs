@@ -39,7 +39,7 @@
                 Code = code,
                 ClientId = _options.ClientId,
                 ClientSecret = _options.ClientSecret,
-                RedirectUri = _options.RedirectUri
+                RedirectUri = _options.RedirectUri.ToString()
             };
 
             await request.Validate();

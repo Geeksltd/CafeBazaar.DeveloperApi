@@ -10,11 +10,11 @@
 
     class WebApiInvoker
     {
-        public string BaseAddress { get; }
+        public Uri BaseAddress { get; }
         public Encoding Encoding { get; set; } = Encoding.UTF8;
         public TimeSpan Timeout { get; set; } = 30.Seconds();
 
-        public WebApiInvoker(string baseAddress) => BaseAddress = baseAddress;
+        public WebApiInvoker(Uri baseAddress) => BaseAddress = baseAddress;
 
         public Task<T> Get<T>(string path) where T : CafeBazaarResultBase, new()
         {
@@ -68,7 +68,7 @@
         {
             return new HttpClient
             {
-                BaseAddress = new Uri(BaseAddress),
+                BaseAddress = BaseAddress,
                 Timeout = Timeout
             };
         }
