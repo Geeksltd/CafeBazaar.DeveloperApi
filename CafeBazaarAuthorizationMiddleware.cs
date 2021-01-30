@@ -10,17 +10,15 @@
     public class CafeBazaarAuthorizationMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly CafeBazaarOptions _options;
 
-        public CafeBazaarAuthorizationMiddleware(RequestDelegate next, IOptionsSnapshot<CafeBazaarOptions> options)
+        public CafeBazaarAuthorizationMiddleware(RequestDelegate next)
         {
             _next = next ?? throw new ArgumentNullException(nameof(next));
-            _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
         }
 
-        public async Task InvokeAsync(HttpContext context, CafeBazaarDeveloperService developerService)
+        public async Task InvokeAsync(HttpContext context, IOptionsSnapshot<CafeBazaarOptions> options, CafeBazaarDeveloperService developerService)
         {
-            var isRedirectUri = context.Request.Path.StartsWithSegments(_options.RedirectUri.AbsolutePath);
+            var isRedirectUri = context.Request.Path.StartsWithSegments(options.Value.RedirectUri.AbsolutePath);
             var code = context.Request.Query["code"].FirstOrDefault();
 
             if (isRedirectUri && code.HasValue())
