@@ -12,9 +12,7 @@
         [JsonPropertyName("error_description")]
         public string ErrorDescription { get; set; }
 
-        public bool Succeeded => Error.IsEmpty();
-
-        public bool Failed => !Succeeded;
+        bool Failed => Error.HasValue();
 
         public void EnsureSucceeded()
         {
