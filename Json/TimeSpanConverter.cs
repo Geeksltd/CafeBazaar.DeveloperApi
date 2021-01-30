@@ -5,7 +5,7 @@
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
-    public class TimeSpanConverter : JsonConverter<TimeSpan>
+    class TimeSpanConverter : JsonConverter<TimeSpan>
     {
         public override TimeSpan Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {

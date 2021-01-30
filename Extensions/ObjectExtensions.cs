@@ -5,7 +5,7 @@
     using System.Reflection;
     using Olive;
 
-    public static class ObjectExtensions
+    static class ObjectExtensions
     {
         public static IDictionary<string, string> ToDictionary(this object @this)
         {

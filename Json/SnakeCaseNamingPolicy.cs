@@ -3,7 +3,7 @@
     using Olive;
     using System.Text.Json;
 
-    public class SnakeCaseNamingPolicy : JsonNamingPolicy
+    class SnakeCaseNamingPolicy : JsonNamingPolicy
     {
         public static SnakeCaseNamingPolicy SnakeCase { get; } = new SnakeCaseNamingPolicy();
 

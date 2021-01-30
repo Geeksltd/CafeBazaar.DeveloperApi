@@ -8,7 +8,7 @@
     using System.Threading.Tasks;
     using Olive;
 
-    public class WebApiInvoker
+    class WebApiInvoker
     {
         public string BaseAddress { get; }
         public Encoding Encoding { get; set; } = Encoding.UTF8;
