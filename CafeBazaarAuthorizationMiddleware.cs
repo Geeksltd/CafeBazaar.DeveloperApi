@@ -27,6 +27,7 @@
             {
                 await developerService.HandleAuthorizationCallback(code);
                 await context.Response.WriteAsync("Cafe Bazaar authorization callback executed.");
+                return;
             }
 
             // Call the next delegate/middleware in the pipeline
