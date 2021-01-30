@@ -13,7 +13,6 @@ using CafeBazaar.DeveloperApi;
 Then make a call to `AddCafeBazaarDeveloperApi` extension method.
 
 ```
-
 public override void ConfigureServices(IServiceCollection services)
 {
 	services.AddCafeBazaarDeveloperApi(Configuration);
