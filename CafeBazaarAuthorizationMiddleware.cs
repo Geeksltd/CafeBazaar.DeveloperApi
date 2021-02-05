@@ -18,10 +18,10 @@
 
         public async Task InvokeAsync(HttpContext context, IOptionsSnapshot<CafeBazaarOptions> options, CafeBazaarDeveloperService developerService)
         {
-            var isRedirectUri = context.Request.Path.StartsWithSegments(options.Value.RedirectUri.AbsolutePath);
+            var pathMatched = context.Request.Path.StartsWithSegments(options.Value.RedirectUri.AbsolutePath);
             var code = context.Request.Query["code"].FirstOrDefault();
 
-            if (isRedirectUri && code.HasValue())
+            if (pathMatched && code.HasValue())
             {
                 await developerService.HandleAuthorizationCallback(code);
                 await context.Response.WriteAsync("Cafe Bazaar authorization callback executed.");
