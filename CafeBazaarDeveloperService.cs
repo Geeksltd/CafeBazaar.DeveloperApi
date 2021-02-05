@@ -7,26 +7,26 @@
 
     public class CafeBazaarDeveloperService
     {
-        readonly CafeBazaarOptions _options;
-        readonly ICafeBazaarTokenStorage _tokenStorage;
-        readonly WebApiInvoker _webApiInvoker;
+        readonly CafeBazaarOptions options;
+        readonly ICafeBazaarTokenStorage tokenStorage;
+        readonly WebApiInvoker webApiInvoker;
 
         public CafeBazaarDeveloperService(IOptionsSnapshot<CafeBazaarOptions> options, ICafeBazaarTokenStorage tokenStorage)
         {
-            _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
-            _tokenStorage = tokenStorage ?? throw new ArgumentNullException(nameof(tokenStorage));
-            _webApiInvoker = new WebApiInvoker(_options.BaseUri);
+            this.options = options?.Value ?? throw new ArgumentNullException(nameof(options));
+            this.tokenStorage = tokenStorage ?? throw new ArgumentNullException(nameof(tokenStorage));
+            this.webApiInvoker = new WebApiInvoker(this.options.BaseUri);
         }
 
         public async Task<bool> IsAuthorizationRequired()
         {
-            return (await _tokenStorage.GetAccessToken()).IsEmpty();
+            return (await tokenStorage.GetAccessToken()).IsEmpty();
         }
 
         public Task<string> GetAuthorizationUri()
         {
             return Task.FromResult(
-                $"{_options.BaseUri}devapi/v2/auth/authorize/?response_type=code&access_type=offline&redirect_uri={_options.RedirectUri}&client_id={_options.ClientId}"
+                $"{options.BaseUri}devapi/v2/auth/authorize/?response_type=code&access_type=offline&redirect_uri={options.RedirectUri}&client_id={options.ClientId}"
             );
         }
 
@@ -37,18 +37,18 @@
             var request = new CafeBazaarObtainTokenRequest
             {
                 Code = code,
-                ClientId = _options.ClientId,
-                ClientSecret = _options.ClientSecret,
-                RedirectUri = _options.RedirectUri.ToString()
+                ClientId = options.ClientId,
+                ClientSecret = options.ClientSecret,
+                RedirectUri = options.RedirectUri.ToString()
             };
 
             await request.Validate();
 
-            var result = await _webApiInvoker.PostForm<CafeBazaarObtainTokenResult>(path, request);
+            var result = await webApiInvoker.PostForm<CafeBazaarObtainTokenResult>(path, request);
 
             result.EnsureSucceeded();
 
-            await _tokenStorage.Save(result.AccessToken, result.ExpiresIn, result.RefreshToken);
+            await tokenStorage.Save(result.AccessToken, result.ExpiresIn, result.RefreshToken);
         }
 
         public async Task<CafeBazaarValidatePurchaseResult> ValidatePurchase(CafeBazaarValidatePurchaseRequest request)
@@ -57,9 +57,9 @@
 
             await EnsureAccessTokenValidity();
 
-            var path = $"devapi/v2/api/validate/{request.PackageName}/inapp/{request.ProductId}/purchases/{request.PurchaseToken}/?access_token={await _tokenStorage.GetAccessToken()}";
+            var path = $"devapi/v2/api/validate/{request.PackageName}/inapp/{request.ProductId}/purchases/{request.PurchaseToken}/?access_token={await tokenStorage.GetAccessToken()}";
 
-            var result = await _webApiInvoker.Get<CafeBazaarValidatePurchaseResult>(path);
+            var result = await webApiInvoker.Get<CafeBazaarValidatePurchaseResult>(path);
 
             result.EnsureSucceeded();
 
@@ -72,9 +72,9 @@
 
             await EnsureAccessTokenValidity();
 
-            var path = $"devapi/v2/api/applications/{request.PackageName}/subscriptions/{request.SubscriptionId}/purchases/{request.PurchaseToken}/?access_token={await _tokenStorage.GetAccessToken()}";
+            var path = $"devapi/v2/api/applications/{request.PackageName}/subscriptions/{request.SubscriptionId}/purchases/{request.PurchaseToken}/?access_token={await tokenStorage.GetAccessToken()}";
 
-            var result = await _webApiInvoker.Get<CafeBazaarValidateSubscriptionResult>(path);
+            var result = await webApiInvoker.Get<CafeBazaarValidateSubscriptionResult>(path);
 
             result.EnsureSucceeded();
 
@@ -87,9 +87,9 @@
 
             await EnsureAccessTokenValidity();
 
-            var path = $"devapi/v2/api/applications/{request.PackageName}/subscriptions/{request.SubscriptionId}/purchases/{request.PurchaseToken}/cancel/?access_token={await _tokenStorage.GetAccessToken()}";
+            var path = $"devapi/v2/api/applications/{request.PackageName}/subscriptions/{request.SubscriptionId}/purchases/{request.PurchaseToken}/cancel/?access_token={await tokenStorage.GetAccessToken()}";
 
-            var result = await _webApiInvoker.Get<CafeBazaarCancelSubscriptionResult>(path);
+            var result = await webApiInvoker.Get<CafeBazaarCancelSubscriptionResult>(path);
 
             result.EnsureSucceeded();
 
@@ -98,10 +98,10 @@
 
         async Task EnsureAccessTokenValidity()
         {
-            if ((await _tokenStorage.GetRefreshToken()).IsEmpty())
+            if ((await tokenStorage.GetRefreshToken()).IsEmpty())
                 throw new Exception("First of all you need to authorize against Cafe Bazzar.");
 
-            if (await _tokenStorage.AccessTokenExpired())
+            if (await tokenStorage.AccessTokenExpired())
                 await RenewAccessToken();
         }
 
@@ -111,18 +111,18 @@
 
             var request = new CafeBazaarRenewTokenRequest
             {
-                ClientId = _options.ClientId,
-                ClientSecret = _options.ClientSecret,
-                RefreshToken = await _tokenStorage.GetRefreshToken()
+                ClientId = options.ClientId,
+                ClientSecret = options.ClientSecret,
+                RefreshToken = await tokenStorage.GetRefreshToken()
             };
 
             await request.Validate();
 
-            var result = await _webApiInvoker.PostForm<CafeBazaarRenewTokenResult>(path, request);
+            var result = await webApiInvoker.PostForm<CafeBazaarRenewTokenResult>(path, request);
 
             result.EnsureSucceeded();
 
-            await _tokenStorage.Renew(result.AccessToken, result.ExpiresIn);
+            await tokenStorage.Renew(result.AccessToken, result.ExpiresIn);
         }
     }
 }
