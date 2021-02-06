@@ -9,11 +9,11 @@
 
     public class CafeBazaarAuthorizationMiddleware
     {
-        readonly RequestDelegate next;
+        readonly RequestDelegate Next;
 
         public CafeBazaarAuthorizationMiddleware(RequestDelegate next)
         {
-            this.next = next ?? throw new ArgumentNullException(nameof(next));
+            this.Next = next ?? throw new ArgumentNullException(nameof(next));
         }
 
         public async Task InvokeAsync(HttpContext context, IOptionsSnapshot<CafeBazaarOptions> options, CafeBazaarDeveloperService developerService)
@@ -28,7 +28,7 @@
                 return;
             }
 
-            await next(context);
+            await Next(context);
         }
     }
 }

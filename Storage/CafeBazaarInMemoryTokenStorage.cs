@@ -6,9 +6,9 @@
 
     public class CafeBazaarInMemoryTokenStorage : CafeBazaarTokenStorageBase
     {
-        readonly CafeBazaarToken token;
+        readonly CafeBazaarToken Token;
 
-        public CafeBazaarInMemoryTokenStorage() => token = new CafeBazaarToken();
+        public CafeBazaarInMemoryTokenStorage() => Token = new CafeBazaarToken();
 
         public override Task Save(string accessToken, TimeSpan expiresIn, string refreshToken)
         {
@@ -18,9 +18,9 @@
 
             if (refreshToken.IsEmpty()) throw new ArgumentNullException(nameof(refreshToken));
 
-            token.AccessToken = accessToken;
-            token.ExpiresAt = expiresIn.ToDateTime();
-            token.RefreshToken = refreshToken;
+            Token.AccessToken = accessToken;
+            Token.ExpiresAt = expiresIn.ToDateTime();
+            Token.RefreshToken = refreshToken;
 
             return Task.CompletedTask;
         }
@@ -31,12 +31,12 @@
 
             if (expiresIn == TimeSpan.MinValue) throw new ArgumentException("Already expired!", nameof(expiresIn));
 
-            token.AccessToken = accessToken;
-            token.ExpiresAt = expiresIn.ToDateTime();
+            Token.AccessToken = accessToken;
+            Token.ExpiresAt = expiresIn.ToDateTime();
 
             return Task.CompletedTask;
         }
 
-        protected override Task<CafeBazaarToken> GetToken() => Task.FromResult(token);
+        protected override Task<CafeBazaarToken> GetToken() => Task.FromResult(Token);
     }
 }
