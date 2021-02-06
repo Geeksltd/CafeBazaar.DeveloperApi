@@ -9,8 +9,8 @@
         public static IServiceCollection AddCafeBazaarDeveloperApi(this IServiceCollection services, IConfiguration config, string configKey = "CafeBazaar")
         {
             services.AddOptions<CafeBazaarOptions>()
-                           .Configure(opts => config.GetSection(configKey)?.Bind(opts))
-                           .Validate(opts => opts.Validate());
+                    .Configure(opts => config.GetSection(configKey)?.Bind(opts))
+                    .Validate(opts => opts.Validate());
 
             services.AddScoped<CafeBazaarDeveloperService>();
 
