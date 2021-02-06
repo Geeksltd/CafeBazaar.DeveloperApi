@@ -8,9 +8,15 @@
     {
         public static IServiceCollection AddCafeBazaarDeveloperApi(this IServiceCollection services, IConfiguration config, string configKey = "CafeBazaar")
         {
-            return services.Configure<CafeBazaarOptions>(opts => config.GetSection(configKey)?.Bind(opts))
-                           .AddScoped<CafeBazaarDeveloperService>()
-                           .AddSingleton<ICafeBazaarTokenStorage, CafeBazaarInMemoryTokenStorage>();
+            services.AddOptions<CafeBazaarOptions>()
+                           .Configure(opts => config.GetSection(configKey)?.Bind(opts))
+                           .Validate(opts => opts.Validate());
+
+            services.AddScoped<CafeBazaarDeveloperService>();
+
+            services.AddSingleton<ICafeBazaarTokenStorage, CafeBazaarInMemoryTokenStorage>();
+
+            return services;
         }
 
         public static IApplicationBuilder UseCafeBazaarDeveloperApi(this IApplicationBuilder builder)
