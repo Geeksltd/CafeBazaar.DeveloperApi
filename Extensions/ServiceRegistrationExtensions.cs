@@ -6,10 +6,10 @@
 
     public static class ServiceRegistrationExtensions
     {
-        public static IServiceCollection AddCafeBazaarDeveloperApi(this IServiceCollection services, IConfiguration config, string configKey = "CafeBazaar")
+        public static IServiceCollection AddCafeBazaarDeveloperApi(this IServiceCollection services, string configKey = "CafeBazaar")
         {
             services.AddOptions<CafeBazaarOptions>()
-                    .Configure(opts => config.GetSection(configKey)?.Bind(opts))
+                    .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
                     .Validate(opts => opts.Validate());
 
             services.AddScoped<CafeBazaarDeveloperService>();
