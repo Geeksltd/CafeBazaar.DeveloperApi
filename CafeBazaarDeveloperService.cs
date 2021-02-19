@@ -15,7 +15,7 @@
         {
             Options = options?.Value ?? throw new ArgumentNullException(nameof(options));
             TokenStorage = tokenStorage ?? throw new ArgumentNullException(nameof(tokenStorage));
-            WebApiInvoker = new WebApiInvoker(this.Options.BaseUri);
+            WebApiInvoker = new WebApiInvoker(Options.BaseUri);
         }
 
         public async Task<bool> IsAuthorizationRequired()
