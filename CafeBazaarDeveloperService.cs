@@ -2,17 +2,20 @@
 {
     using System;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Options;
     using Olive;
 
     public class CafeBazaarDeveloperService
     {
+        readonly IHttpContextAccessor HttpContextAccessor;
         readonly CafeBazaarOptions Options;
         readonly ICafeBazaarTokenStorage TokenStorage;
         readonly WebApiInvoker WebApiInvoker;
 
-        public CafeBazaarDeveloperService(IOptionsSnapshot<CafeBazaarOptions> options, ICafeBazaarTokenStorage tokenStorage)
+        public CafeBazaarDeveloperService(IHttpContextAccessor httpContextAccessor, IOptionsSnapshot<CafeBazaarOptions> options, ICafeBazaarTokenStorage tokenStorage)
         {
+            HttpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
             Options = options?.Value ?? throw new ArgumentNullException(nameof(options));
             TokenStorage = tokenStorage ?? throw new ArgumentNullException(nameof(tokenStorage));
             WebApiInvoker = new WebApiInvoker(Options.BaseUri);
@@ -26,7 +29,7 @@
         public Task<string> GetAuthorizationUri()
         {
             return Task.FromResult(
-                $"{Options.BaseUri}devapi/v2/auth/authorize/?response_type=code&access_type=offline&redirect_uri={Options.RedirectUri}&client_id={Options.ClientId}"
+                $"{Options.BaseUri}devapi/v2/auth/authorize/?response_type=code&access_type=offline&redirect_uri={GetAbsoluteRedirectUri()}&client_id={Options.ClientId}"
             );
         }
 
@@ -39,7 +42,7 @@
                 Code = code,
                 ClientId = Options.ClientId,
                 ClientSecret = Options.ClientSecret,
-                RedirectUri = Options.RedirectUri.ToString()
+                RedirectUri = GetAbsoluteRedirectUri()
             };
 
             await request.Validate();
@@ -123,6 +126,16 @@
             result.EnsureSucceeded();
 
             await TokenStorage.Renew(result.AccessToken, result.ExpiresIn);
+        }
+
+        string GetAbsoluteRedirectUri()
+        {
+            var redirectUri = new Uri(Options.RedirectPath);
+
+            if (redirectUri.IsAbsoluteUri) return redirectUri.ToString();
+
+            var request = HttpContextAccessor.HttpContext.Request;
+            return new Uri(new Uri($"{request.Scheme}://{request.Host}"), redirectUri).ToString();
         }
     }
 }

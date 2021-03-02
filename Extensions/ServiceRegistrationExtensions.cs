@@ -1,8 +1,7 @@
 ﻿namespace CafeBazaar.DeveloperApi
 {
-    using System.Linq;
     using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Routing;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
@@ -16,14 +15,9 @@
                     .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
                     .Validate(opts => opts.BaseUri is not null, $"{nameof(CafeBazaarOptions.BaseUri)} is null.")
                     .Validate(opts => !opts.BaseUri.IsAbsoluteUri, $"{nameof(CafeBazaarOptions.BaseUri)} is not absolute.")
-                    .Validate(opts => opts.RedirectUri is not null, $"{nameof(CafeBazaarOptions.RedirectUri)} is null.")
+                    .Validate(opts => opts.RedirectPath.HasValue(), $"{nameof(CafeBazaarOptions.RedirectPath)} is empty.")
                     .Validate(opts => opts.ClientId.HasValue(), $"{nameof(CafeBazaarOptions.ClientId)} is empty.")
-                    .Validate(opts => opts.ClientSecret.HasValue(), $"{nameof(CafeBazaarOptions.ClientSecret)} is empty.")
-                    .PostConfigure<IHttpContextAccessor>((opts, contextAccessor) =>
-                    {
-                        if (opts.RedirectUri.IsAbsoluteUri) return;
-                        opts.RedirectUri = contextAccessor.ToAbsolute(opts.RedirectUri);
-                    });
+                    .Validate(opts => opts.ClientSecret.HasValue(), $"{nameof(CafeBazaarOptions.ClientSecret)} is empty.");
 
             services.AddScoped<CafeBazaarDeveloperService>();
 
@@ -34,18 +28,15 @@
 
         public static IApplicationBuilder UseCafeBazaarDeveloperApi(this IApplicationBuilder builder)
         {
-            return builder.MapWhen(MatchesRedirectUriEndpoint, builder => builder.UseMiddleware<CafeBazaarAuthorizationMiddleware>());
-        }
+            var routes = new RouteBuilder(builder);
 
-        static bool MatchesRedirectUriEndpoint(HttpContext context)
-        {
-            var options = context.RequestServices.GetService<IOptionsSnapshot<CafeBazaarOptions>>();
+            var options = builder.ApplicationServices.GetService<IOptions<CafeBazaarOptions>>();
 
-            if (!context.Request.Path.StartsWithSegments(options.Value.RedirectUri.AbsolutePath)) return false;
+            routes.MapMiddlewarePost(options.Value.RedirectPath, builder => builder.UseMiddleware<CafeBazaarAuthorizationMiddleware>());
 
-            if (context.Request.Query["code"].FirstOrDefault() is null) return false;
+            builder.UseRouter(routes.Build());
 
-            return true;
+            return builder;
         }
     }
 }
