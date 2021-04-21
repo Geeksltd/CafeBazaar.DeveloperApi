@@ -35,7 +35,7 @@ Here is the required properties:
 {
   "CafeBazaar": {
     "BaseUri": "https://pardakht.cafebazaar.ir", // This is optional
-    "RedirectUri": "https://your-app.com:5000/cafe-bazaar-authorize-callback", // localhost isn't allowed by Cafe Bazaar
+    "RedirectUri": "https://your-app.com:5000/cafe-bazaar/auth-callback", // localhost isn't allowed by Cafe Bazaar
     "ClientId": "<YOUR_CLIENT_ID>",
     "ClientSecret": "<YOUR_CLIENT_SECRET>"
   }
