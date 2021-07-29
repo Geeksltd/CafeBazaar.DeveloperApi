@@ -5,7 +5,7 @@
     <RootNamespace>CafeBazaar.DeveloperApi</RootNamespace>
     <PackageId>CafeBazaar.DeveloperApi</PackageId>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.18.0</Version>
+    <Version>1.0.19.0</Version>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <DefineConstants>$(DefineConstants)</DefineConstants>
@@ -40,8 +40,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.2.2" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
-    <PackageReference Include="Olive" Version="2.1.212" />
+    <PackageReference Include="Olive" Version="2.1.278" />
   </ItemGroup>
 </Project>
