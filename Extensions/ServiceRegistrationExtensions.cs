@@ -21,7 +21,7 @@
 
             services.AddScoped<CafeBazaarDeveloperService>();
 
-            services.AddSingleton<ICafeBazaarTokenStorage, CafeBazaarInMemoryTokenStorage>();
+            services.AddScoped<ICafeBazaarTokenStorage, CafeBazaarInMemoryTokenStorage>();
 
             return services;
         }

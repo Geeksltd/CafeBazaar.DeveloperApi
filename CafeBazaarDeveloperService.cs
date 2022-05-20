@@ -1,10 +1,10 @@
 ﻿namespace CafeBazaar.DeveloperApi
 {
-    using System;
-    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Options;
     using Olive;
+    using System;
+    using System.Threading.Tasks;
 
     public class CafeBazaarDeveloperService
     {
@@ -116,7 +116,7 @@
             {
                 ClientId = Options.ClientId,
                 ClientSecret = Options.ClientSecret,
-                RefreshToken = await TokenStorage.GetRefreshToken()
+                RefreshToken = Options.RefreshToken
             };
 
             await request.Validate();
@@ -130,7 +130,7 @@
 
         string GetAbsoluteRedirectUri()
         {
-            var redirectUri = new Uri(Options.RedirectPath);
+            var redirectUri = new Uri(Options.RedirectPath, UriKind.RelativeOrAbsolute);
 
             if (redirectUri.IsAbsoluteUri) return redirectUri.ToString();
 

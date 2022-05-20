@@ -2,13 +2,21 @@
 {
     using System;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.Options;
     using Olive;
 
     public class CafeBazaarInMemoryTokenStorage : CafeBazaarTokenStorageBase
     {
         readonly CafeBazaarToken Token;
 
-        public CafeBazaarInMemoryTokenStorage() => Token = new CafeBazaarToken();
+        public CafeBazaarInMemoryTokenStorage(IOptionsSnapshot<CafeBazaarOptions> options)
+        {
+            Token = new CafeBazaarToken()
+            {
+                 RefreshToken= options.Value.RefreshToken
+            };
+        }
+
 
         public override Task Save(string accessToken, TimeSpan expiresIn, string refreshToken)
         {
