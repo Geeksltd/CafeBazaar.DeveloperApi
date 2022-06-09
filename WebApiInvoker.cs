@@ -15,9 +15,7 @@
         public WebApiInvoker(Uri baseAddress) => BaseAddress = baseAddress;
 
         public Task<T> Get<T>(string path) where T : CafeBazaarResultBase, new()
-        {
-            return Send<T>((client, _) => client.GetAsync(path));
-        }
+            => Send<T>((client, _) => client.GetAsync(path));
 
         public Task<T> PostJson<T>(string path, object request) where T : CafeBazaarResultBase, new()
         {
@@ -53,22 +51,17 @@
             }
         }
 
-        T CreateDefault<T>(Exception ex) where T : CafeBazaarResultBase, new()
+        T CreateDefault<T>(Exception ex) where T : CafeBazaarResultBase, new() => new()
         {
-            return new T
-            {
-                Error = "Unhandled Exception",
-                ErrorDescription = ex.Message
-            };
-        }
+            Error = "Unhandled Exception",
+            ErrorDescription = ex.Message
+        };
 
-        HttpClient CreateClient()
+        HttpClient CreateClient() => new()
         {
-            return new HttpClient
-            {
-                BaseAddress = BaseAddress,
-                Timeout = Timeout
-            };
-        }
+            BaseAddress = BaseAddress,
+            Timeout = Timeout
+        };
+
     }
 }

@@ -8,5 +8,6 @@
         public string RedirectPath { get; set; } = "cafe-bazaar/auth-callback";
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
+        public string RefreshToken { get; set; }
     }
 }
