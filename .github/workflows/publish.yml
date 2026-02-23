@@ -1,0 +1,22 @@
+name: Publishes a new version of CafeBazaar.DeveloperApi on the nuget.org
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    strategy:
+      matrix:
+        configuration: [ Release ]
+    runs-on: windows-2022
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.x'
+
+    - name: Install Zebble's CLI tools
+      run: dotnet tool install --global zebble-build
+
+    - name: Publish a new CafeBazaar.DeveloperApi package
+      run: zebble-build update-plugin --api-key ${{secrets.NUGET_API_KEY}} --publish
