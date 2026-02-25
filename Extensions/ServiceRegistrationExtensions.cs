@@ -9,11 +9,7 @@
         public static IServiceCollection AddCafeBazaarDeveloperApi(this IServiceCollection services, string configKey = "CafeBazaar")
         {
             services.AddOptions<CafeBazaarOptions>()
-                    .Configure<IConfiguration>((opts, config) =>
-                    {
-                        config.GetSection(configKey)?.Bind(opts);
-                        config.GetSection(ConfigurationPath.KeyDelimiter + configKey)?.Bind(opts);
-                    })
+                    .Configure<IConfiguration>((opts, config) => config.GetSection(configKey)?.Bind(opts))
                     .Validate(opts => opts.BaseUri is not null, $"{nameof(CafeBazaarOptions.BaseUri)} is null.")
                     .Validate(opts => opts.BaseUri.IsAbsoluteUri, $"{nameof(CafeBazaarOptions.BaseUri)} is not absolute.")
                     .Validate(opts => opts.RedirectPath.HasValue(), $"{nameof(CafeBazaarOptions.RedirectPath)} is empty.")
